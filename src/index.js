@@ -16,16 +16,19 @@ fetchBreeds()
     sel.setData(createMarkup(element));
   })
   .catch(error => {
-    console.log(error);
-    errorEl.classList.remove('error-none');
+      Notiflix.Notify.failure(
+        'Oops! Something went wrong! Try reloading the page!'
+      );
   });
 
 selectEl.addEventListener('change', onSelectedCat);
 
 function onSelectedCat(event) {
   const id = event.target.value;
- 
-  catInfoEl.classList.add('cat-none');
+  console.log(id);
+  console.log(loaderEl);
+  loaderEl.classList.remove('js-style');
+  
   fetchCatByBreed(id)
     .then(id => {
       const markup = `<div class="cat-info">
@@ -38,12 +41,12 @@ function onSelectedCat(event) {
 	</div>
 </div>`;
       catInfoEl.innerHTML = markup;
-      loaderEl.element.remove();
-      catInfoEl.element.remove();
+      loaderEl.classList.remove('js-style');
+      catInfoEl.classList.remove('js-style');
     })
 
     .catch(error => {
       console.log(error);
-      errorEl.classList.add('.error-none');
+      errorEl.classList.add('error-none');
     });
 }
