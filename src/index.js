@@ -2,6 +2,8 @@ import { fetchBreeds, fetchCatByBreed } from './js/services/cat-api';
 import createMarkup from './js/services/createMarkup';
 import SlimSelect from 'slim-select';
 import refs from './js/services/refs';
+import Notiflix from 'notiflix';
+
 const { selectEl } = refs;
 const { catInfoEl } = refs;
 const { loaderEl } = refs;
@@ -16,19 +18,16 @@ fetchBreeds()
     sel.setData(createMarkup(element));
   })
   .catch(error => {
-      Notiflix.Notify.failure(
-        'Oops! Something went wrong! Try reloading the page!'
-      );
+    console.log(error);
+    errorEl.classList.remove('error-none');
   });
 
 selectEl.addEventListener('change', onSelectedCat);
 
 function onSelectedCat(event) {
   const id = event.target.value;
-  console.log(id);
-  console.log(loaderEl);
-  loaderEl.classList.remove('js-style');
-  
+  loaderEl.classList.add('loader');
+  catInfoEl.classList.add('cat-none');
   fetchCatByBreed(id)
     .then(id => {
       const markup = `<div class="cat-info">
@@ -41,12 +40,15 @@ function onSelectedCat(event) {
 	</div>
 </div>`;
       catInfoEl.innerHTML = markup;
-      loaderEl.classList.remove('js-style');
-      catInfoEl.classList.remove('js-style');
+      loaderEl.classList.remove('loader');
+      catInfoEl.classList.remove('cat-none');
     })
 
     .catch(error => {
       console.log(error);
-      errorEl.classList.add('error-none');
+      Notiflix.Notify.failure(
+        'Oops! Something went wrong! Try reloading the page!'
+      );
+      // errorEl.classList.add('error-none');
     });
 }
